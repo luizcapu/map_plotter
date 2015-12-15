@@ -49,4 +49,4 @@ Pelo browser acesse o host e a porta configurados no arquivo de configuração. 
 Exemplo de Plotagem
 -----
 
-(docs/exemplo.jpg?raw=true)
+![Exemplo de Plotagem](docs/exemplo.jpg?raw=true)
