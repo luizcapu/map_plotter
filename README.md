@@ -1,4 +1,4 @@
-99taxis API Project
+TunEduc Map Plotter Project
 ============
 
 Objetivos
@@ -10,16 +10,13 @@ Objetivos
 Instalação
 -----
 
-Entre na pasta raiz do projeto e execute ./first_install.sh
+1) Prepare seu ambiente para rodar aplicações Python (2.7x) (https://www.python.org/about/gettingstarted/)
 
-A instalação automatizada foi testada em Ubuntu 14.04 LTS. Para rodar em outras distribuições talvez sejam necessárias adaptações no instalador.
+2) Preferencialmente, faço uso de ambientes virtuais (https://osantana.me/ambiente-isolado-para-python-com-virtualenv/)
 
-Atualizações
------
+3) Ative o virtualenv
 
-Para atualizar somente o código fonte após alguma alteração, entre na pasta raiz e execute ./install.sh
-
-Se estiver usando virtualenv (recomendado) não esqueça de ativá-la antes de rodar o install.
+4) Rode o arquivo install.sh encontrado na raiz do projeto
 
 
 Help Output
@@ -33,6 +30,11 @@ optional arguments:
   -e ENV, --env ENV  Environment to run (prod|test). Default: test
 ```
 
+Configurações
+-----
+
+Edite as configurações da aplicação no arquivo map_plotter/config/cfg-ENV.json (ex: cfg-text.json)
+
 
 Exemplo de Uso
 -----
@@ -41,35 +43,10 @@ Exemplo de Uso
 ./taxi_api/server.py -e prod
 ```
 
-Aplicação na Nuvem
+Pelo browser acesse o host e a porta configurados no arquivo de configuração. Ex: http://localhost:5001/
+
+
+Exemplo de Plotagem
 -----
 
-Uma instância do servidor está rodando no seguinte endereço: 
-
-http://ec2-54-213-3-150.us-west-2.compute.amazonaws.com:5000
-
-
-As documentações podem ser acessadas em: 
-
-http://ec2-54-213-3-150.us-west-2.compute.amazonaws.com:5000/api/spec.html#!/spec/
-
-
-Algoritmo Ótimo de Procura dos Taxistas
------
-
-[Descrição Textual](docs/driver_search_algo.pdf)
-
-[Esboço Implementação](taxi_api/helpers/driver_finder.py)
-
-
-Autenticação nos endpoints
------
-
-[Solução de Autenticação](docs/auth.pdf)
-
-
-Criar outros endpoints
------
-
-[endpoints adicionais](docs/endpoints.pdf)
-
+(docs/exemplo.jpg?raw=true)

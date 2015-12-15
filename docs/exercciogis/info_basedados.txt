@@ -1,0 +1,12 @@
+USER: root
+SENHA: sem senha
+
+TABLES
+dadosgeo.ibge_censo_setor_2010_domiciliorenda:
+	cod_setor - código do setor censitário
+	v002 - total do rendimento nominal mensal dos domicílios particulares
+dadosgeo.malha_see_domicilio_tabela:
+	cod_setor - código do setor censitário
+	cod_municip - código do município
+	nm_municip - nome do município
+	geom - poligono que demarca o setor censitário
