@@ -9,7 +9,7 @@
         "port": 5432,
         "dbname": "modgeo",
         "username": "root",
-        "password": "pgrt123"
+        "password": ""
     },
     "google_maps": {
         "api_key": ""
