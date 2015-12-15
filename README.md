@@ -40,7 +40,7 @@ Exemplo de Uso
 -----
 
 ```
-./taxi_api/server.py -e prod
+./map_plotter/server.py -e prod
 ```
 
 Pelo browser acesse o host e a porta configurados no arquivo de configuração. Ex: http://localhost:5001/
