@@ -28,7 +28,9 @@ def navg_redir():
 def nominal_avg(city_id):
     extractor = DataExtractor()
     extractor.run(city_id)
-    return render_template("nominal_avg.html", city_id=city_id, map_id=city_id)
+    return render_template("nominal_avg.html",
+                           city_id=city_id,
+                           json_url=url_for('static', filename='map_json/%s.json' % city_id))
 
 if __name__ == '__main__':
 

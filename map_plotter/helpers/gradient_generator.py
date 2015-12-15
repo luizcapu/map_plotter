@@ -54,6 +54,26 @@ class GradientGenerator(object):
 
         return GradientGenerator.color_dict(RGB_list)["hex"]
 
+    @staticmethod
+    def gradient_from_percentage(start_hex, finish_hex, percentage):
+        ''' returns a gradient list of (n) colors between
+          two hex colors. start_hex and finish_hex
+          should be the full six-digit color string,
+          inlcuding the number sign ("#FFFFFF") '''
+        # Starting and ending colors in RGB form
+        s = GradientGenerator.hex_to_RGB(start_hex)
+        f = GradientGenerator.hex_to_RGB(finish_hex)
+
+        if percentage:
+            # Interpolate RGB vector for color at the current value of t
+            RGB = [
+                int(s[j] + (float(percentage) / (100 - 1)) * (f[j] - s[j]))
+                for j in range(3)
+            ]
+        else:
+            RGB = s
+
+        return GradientGenerator.RGB_to_hex(RGB)
 
 if __name__ == '__main__':
     print GradientGenerator.linear_gradient("#000000")  # black to white
