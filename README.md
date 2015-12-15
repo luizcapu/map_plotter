@@ -33,7 +33,7 @@ optional arguments:
 Configurações
 -----
 
-Edite as configurações da aplicação no arquivo map_plotter/config/cfg-ENV.json (ex: cfg-text.json)
+Edite as configurações da aplicação no arquivo map_plotter/config/cfg-ENV.json (ex: cfg-test.json)
 
 
 Exemplo de Uso
