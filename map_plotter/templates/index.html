@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>Inicio</h2>
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <form action="{{ url_for('navg_redir') }}" method=post>
+    <dl>
+      <dt>Informe um ID de Cidade:
+      <dd><input type=text name=city_id id="city_id" value="3550308">
+      <dd><input type=submit value=Enviar>
+    </dl>
+  </form>
+{% endblock %}
