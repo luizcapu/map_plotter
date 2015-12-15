@@ -1,0 +1,17 @@
+{
+    "api": {
+        "port": 5002,
+        "host": "0.0.0.0",
+        "version": "1.0-prod"
+    },
+    "database": {
+        "host": "127.0.0.1",
+        "port": 5432,
+        "dbname": "modgeo",
+        "username": "root",
+        "password": "pgrt123"
+    },
+    "google_maps": {
+        "api_key": ""
+    }
+}

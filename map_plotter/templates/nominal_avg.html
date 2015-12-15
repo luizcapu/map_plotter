@@ -1,9 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
 <h2>
-    Plotting City {{ city_id }}
+    {{ city_name.decode('utf-8') }}
+    <br/>
+    <a href="/" style='font-size: 12px; font-weight: bold; color: #000;'>(trocar cidade)</a>
 
-    <div id="divLabel" style="float: right; clear: none; text-align: right; font-weight: bold; font-size: 18px; color:#000;">
+    <div id="divLabel" style="float: right; clear: none; text-align: right; font-weight: bold; font-size: 22px; color:#000;">
         &nbsp;
     </div>
 
@@ -16,7 +18,7 @@
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 10,
-            center: {lat: -23.70, lng: -46.55}
+            center: {lat: {{ map_lat }}, lng: {{ map_lon }}}
         });
 
         // Load GeoJSON.
@@ -46,5 +48,5 @@
 
 </script>
 <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUuiqKxYF6OPRAWf0hwt52GYX3SpBWlO4&signed_in=false&callback=initMap"></script>
+        src="https://maps.googleapis.com/maps/api/js?key={{ gm_api_key }}&signed_in=false&callback=initMap"></script>
 {% endblock %}

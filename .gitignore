@@ -3,5 +3,6 @@
 .pydevproject
 .idea
 build
+map_plotter/static/map_json/*
 dist
 *.egg-info

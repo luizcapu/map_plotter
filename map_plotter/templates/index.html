@@ -1,12 +1,18 @@
 {% extends "layout.html" %}
 {% block body %}
-  <h2>Inicio</h2>
-  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-  <form action="{{ url_for('navg_redir') }}" method=post>
+<h2>Selecione uma cidade:</h2>
+<form action="{{ url_for('navg_redir') }}" method=post>
     <dl>
-      <dt>Informe um ID de Cidade:
-      <dd><input type=text name=city_id id="city_id" value="3550308">
-      <dd><input type=submit value=Enviar>
+        <dd><select type=text name=city_id id="city_id">
+            {% for city in cities %}
+            <option value="{{ city.code }}" {% if city.code == '3550308' %} selected {% endif %}>
+            {{ city.name.decode('utf-8') }}
+            </option>
+            {% else %}
+            <option value="">Nenhuma cidade disponivel</option>
+            {% endfor %}
+        </select>
+        <dd><input type=submit value=Enviar>
     </dl>
-  </form>
+</form>
 {% endblock %}

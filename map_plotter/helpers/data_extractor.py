@@ -1,14 +1,31 @@
+# -*- coding: utf-8 -*-
 __author__ = 'luiz'
 import psycopg2
 import json
 from gradient_generator import GradientGenerator
 import os
+from helpers import Helpers
 
 
 class DataExtractor(object):
+    """
+    Descricao codigo setor censitario
+
+    Formato: UFMMMMMDDSDSSSS
+    UF - unidade de federacao
+    MMMMM - municipio
+    DD - distrito
+    SD - subdistrito
+    SSSS - setor
+    """
+
+    _cities_name = {}
+    __db_cfg = None
+    _bairro_start_pos = '8'
+    _bairro_copy_len = '2'
 
     def __init__(self):
-        pass
+        self.city_name = None
 
     def _row_to_feature(self, row):
         return {
@@ -21,7 +38,28 @@ class DataExtractor(object):
             "geometry": json.loads(row[2])
         }
 
-    def run(self, cod_municipio, *args, **kwargs):
+    @property
+    def _cfg(self):
+        if DataExtractor.__db_cfg is None:
+            DataExtractor.__db_cfg = Helpers.load_config()["database"]
+        return DataExtractor.__db_cfg
+
+    def get_name_from_id(self, city_id, db_cursor=None):
+        if not city_id in DataExtractor._cities_name.keys():
+            if db_cursor is None:
+                connection = psycopg2.connect(
+                    host=self._cfg["host"],
+                    database=self._cfg["dbname"],
+                    user=self._cfg["username"],
+                    password=self._cfg["password"]
+                )
+                db_cursor = connection.cursor()
+            sql = 'select nm_municip from dadosgeo.malha_see_domicilio_tabela malha where cod_municip=%s limit 1'
+            db_cursor.execute(sql, (city_id,))
+            DataExtractor._cities_name[city_id] = db_cursor.fetchone()[0]
+        return DataExtractor._cities_name[city_id]
+
+    def run(self, city_id, *args, **kwargs):
         map_json_folder = "%s/static/map_json" % os.path.abspath(
             os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
         if not os.path.isdir(map_json_folder):
@@ -29,21 +67,29 @@ class DataExtractor(object):
                 os.makedirs(map_json_folder)
             except:
                 pass
-        map_json_file = "%s/%s.json" % (map_json_folder, cod_municipio)
+        map_json_file = "%s/%s.json" % (map_json_folder, city_id)
 
-        if not os.path.isfile(map_json_file):
-            connection = psycopg2.connect(
-                host='127.0.0.1', database = 'modgeo', user = 'root', password='pgrt123')
-            cursor = connection.cursor()
+        connection = psycopg2.connect(
+            host=self._cfg["host"],
+            database=self._cfg["dbname"],
+            user=self._cfg["username"],
+            password=self._cfg["password"]
+        )
+        cursor = connection.cursor()
 
-            try:
+        try:
+            self.get_name_from_id(city_id, cursor)
+
+            if not os.path.isfile(map_json_file):
                 sql = 'select distrito_avg.cod_distrito,'
                 sql += ' distrito_avg.nominal_avg,'
                 sql += ' ST_AsGeoJSON(ST_Collect(malha.geom)) as json_geom'
                 sql += ' from'
                 sql += ' ('
                 sql += ' select'
-                sql += ' cast(substring(cast(malha.cod_setor as varchar) from 8 for 2) as varchar) as cod_distrito,'
+                sql += ' cast(substring(cast(malha.cod_setor as varchar) from '+\
+                       DataExtractor._bairro_start_pos+' for '+\
+                       DataExtractor._bairro_copy_len+') as varchar) as cod_distrito,'
                 sql += ' cast(avg(cast(censo.v002 as int)) as float) as nominal_avg'
                 sql += ' from dadosgeo.malha_see_domicilio_tabela malha,'
                 sql += ' dadosgeo.ibge_censo_setor_2010_domiciliorenda censo'
@@ -53,7 +99,9 @@ class DataExtractor(object):
                 sql += ' group by cod_distrito'
                 sql += ' ) as distrito_avg, dadosgeo.malha_see_domicilio_tabela malha'
                 sql += ' where malha.cod_municip=%s'
-                sql += ' and cast(substring(cast(malha.cod_setor as varchar) from 8 for 2) as varchar)' \
+                sql += ' and cast(substring(cast(malha.cod_setor as varchar) from '+\
+                       DataExtractor._bairro_start_pos+' for '+\
+                       DataExtractor._bairro_copy_len+') as varchar)' \
                        ' = distrito_avg.cod_distrito'
                 sql += ' group by distrito_avg.cod_distrito, distrito_avg.nominal_avg'
                 sql += ' order by distrito_avg.nominal_avg desc'
@@ -66,8 +114,8 @@ class DataExtractor(object):
 
                 max_avg = None
                 min_avg = None
-                cod_municipio = str(cod_municipio)
-                cursor.execute(sql, ['X', cod_municipio, cod_municipio])
+                city_id = str(city_id)
+                cursor.execute(sql, ['X', city_id, city_id])
                 for row in cursor:
                     if max_avg is None or max_avg < row[1]:
                         max_avg = row[1]
@@ -91,9 +139,9 @@ class DataExtractor(object):
 
                 with open(map_json_file, "w+") as f:
                     f.write(json.dumps(feature_collection))
-            finally:
-                cursor.close()
-                connection.close()
+        finally:
+            cursor.close()
+            connection.close()
 
 if __name__ == '__main__':
     e = DataExtractor()
